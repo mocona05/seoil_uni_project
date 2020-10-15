@@ -1,15 +1,15 @@
 #pragma once
 
-#define LED_GPIO   33
+#define LED_GPIO   02
 #define LED_ON      digitalWrite(LED_GPIO,0)
 #define LED_OFF      digitalWrite(LED_GPIO,1)
 #define LOGGING_CYCLE_TIME  1000
 
-#define BUTTON_GPIO 22
+#define BUTTON_GPIO 11
 #define READ_SW_PIN      digitalRead(BUTTON_GPIO)
 
-#define I2C_SDA 0
-#define I2C_SCL 16
+#define I2C_SDA 21
+#define I2C_SCL 22
 
 
 

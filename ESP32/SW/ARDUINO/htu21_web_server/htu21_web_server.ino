@@ -4,15 +4,15 @@
 *********/
 
 // Libraries for SD card
-#include "FS.h"                // SD Card ESP32
-#include "SD_MMC.h"            // SD Card ESP32
+//#include "FS.h"                // SD Card ESP32
+//#include "SD_MMC.h"            // SD Card ESP32
 #include "Wire.h"            // SD Card ESP32
 #include "config.h"            // SD Card ESP32
 
 #include <SPI.h>
 
 #include "drv_sht21.h"
-#include "sd_memory.h"
+//#include "sd_memory.h"
 #include "webpage.h"
 
 // Libraries to get time from NTP Server
@@ -34,8 +34,19 @@ uint64_t TIME_TO_SLEEP = 10;
 
 // Save reading number on RTC memory
 
-
-
+#define SENSOR_DATA_PRINTER_CYCLE_TIME 1000
+void sensor_status_print_handler(void){
+  static uint32_t restart_time=0;  
+  uint32_t timeNow;
+  static bool over_flow_f =false;  
+  char value_str[80];
+  timeNow =millis();
+  if(timeNow >= restart_time && !(over_flow_f  && timeNow > (0xFFFFFFFF - SENSOR_DATA_PRINTER_CYCLE_TIME)) ) {
+   over_flow_f= time_end_calculation(timeNow, SENSOR_DATA_PRINTER_CYCLE_TIME, &restart_time);
+    sprintf(value_str, "Temp= %6.2f℃, Humi= %5.2f%RH%%", temperature, humi);
+    Serial.println(value_str);
+  }
+}
     
 void setup() {
   // Start serial communication for debugging purposes
@@ -48,7 +59,7 @@ void setup() {
   pinMode(LED_GPIO, OUTPUT);
   
   init_webServer();
-  init_NTPClient();
+//  init_NTPClient();
 }
 
 typedef enum {
@@ -73,7 +84,8 @@ void loop() {
    }
   }
   button_read_handler();
-  webServer_handler();
+//  webServer_handler();
+  sensor_status_print_handler();
 
   switch((uint8_t)sys_status) {
     case SYSTEM_INIT:
@@ -85,16 +97,16 @@ void loop() {
     case SYSTE_IDLE:
       if(btn_stat == PUSH_SHORT) {
         btn_stat =  BTN_READ;
-        logging_data_handler(true);
+//        logging_data_handler(true);
         sys_status = LOGGING;
         Serial.println("Data Logging Start!");
       }
       break;
     case LOGGING:
-      logging_data_handler(false);
+//      logging_data_handler(false);
       if(btn_stat == PUSH_SHORT) {
         btn_stat =  BTN_READ;
-        logging_data_handler(true);
+//        logging_data_handler(true);
         LED_OFF;
         Serial.println("Data Logging Stop!");
         sys_status = SYSTE_IDLE;

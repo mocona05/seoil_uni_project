@@ -11,7 +11,7 @@
 //#include <SPI.h>
 
 #include "drv_sht21.h"
-#include "sd_memory.h"
+//#include "sd_memory.h"
 
 
 // Libraries to get time from NTP Server
@@ -26,8 +26,8 @@ WebServer server(80);
 
 
 // Replace with your network credentials
-const char* ssid     = "";
-const char* password = "";
+const char* ssid     = "WIFI_SSID";
+const char* password = "PASSWORD";
 
 //===============================================================
 // This routine is executed when you open its IP in browser
@@ -50,14 +50,10 @@ void init_webServer(void) {
   Serial.print("Connecting to ");
   Serial.println(ssid);
   WiFi.begin(ssid, password);
-  /*
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-*/  
+
   while(WiFi.waitForConnectResult() != WL_CONNECTED){      
-      Serial.print(".");
+    Serial.print("WIFI Connection error!\r\n\r\n");
+      return;
     }
     
   //If connection successful show IP address in serial monitor

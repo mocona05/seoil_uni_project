@@ -26,7 +26,7 @@ typedef enum{
 
 static uint8_t sht21_CalcCRC(uint8_t *data,uint8_t nbrOfBytes);
 static bool sht21_Transmit(uint8_t * pData, uint16_t size);
-static uint8_t sht21_Receive(uint8_t * pData, int size);
+static uint8_t sht21_Receive(uint8_t * pData, uint16_t size);
 bool time_end_calculation(uint32_t time_now, uint32_t time_interval, uint32_t * restart_time);
 
 
@@ -229,7 +229,7 @@ static bool sht21_Transmit(uint8_t * pData, uint16_t size) {
 //   delay(85);
 }
 
-static uint8_t sht21_Receive(uint8_t * pData, int size) {
+static uint8_t sht21_Receive(uint8_t * pData, uint16_t size) {
   uint8_t i=0;
     Wire.requestFrom(ADD_SHT21, size);
     while ((Wire.available()) && (i < size)) // slave may send less than requested

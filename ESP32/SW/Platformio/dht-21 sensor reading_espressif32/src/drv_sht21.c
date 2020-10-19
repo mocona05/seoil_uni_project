@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-//#include <errno.h>
 #include <time.h>
 #include <math.h>
+#include "driver/i2c.h"
+#include "config.h"
+#include "drv_i2c.h"
 #include "drv_sht21.h"
 
-#include "Wire.h"
-#define HAL_OK 1
+
 
 #define SHT21_MEASURE_WAIT 120
 
@@ -25,8 +26,6 @@ typedef enum{
 //static uint8_t SHT21_conversion_time;
 
 static uint8_t sht21_CalcCRC(uint8_t *data,uint8_t nbrOfBytes);
-static bool sht21_Transmit(uint8_t * pData, uint16_t size);
-static uint8_t sht21_Receive(uint8_t * pData, int size);
 bool time_end_calculation(uint32_t time_now, uint32_t time_interval, uint32_t * restart_time);
 
 
@@ -53,20 +52,21 @@ bool temp_humi_Measure_Handler(float * pTemp, float * pHumi) {
 	static bool over_flow_f =false;
 //	static uint32_t last_update_time;
 
-	timeNow=millis();
+	timeNow= esp_timer_get_time();
 	switch((uint8_t) status) {
 		case SHT21_INIT:
 			error_count =0;
-//			I2C1_Init();
+			i2c_master_init();
 			if(!sht21_sw_reset()) {
 				goto ERROR;
 			}
+			sht21_user_reg_set();
 			status = TEMP_START;
 			break;
 		
 		case TEMP_START:
 			cmd = SHT21_TRIGGER_T_MEASURE;
-			if(sht21_Transmit(&cmd, 1) != HAL_OK) {
+			if(i2c_write_reg(ADD_SHT21,cmd) != ESP_OK) {
 				goto ERROR;
 			}
 			over_flow_f= time_end_calculation(timeNow, SHT21_MEASURE_WAIT, &restart_time);			
@@ -77,7 +77,7 @@ bool temp_humi_Measure_Handler(float * pTemp, float * pHumi) {
 //		if(timeNow-timeStart > SHT21_MEASURE_WAIT){
 			if(timeNow >= restart_time && !(over_flow_f  && timeNow > (0xFFFFFFFF - SHT21_MEASURE_WAIT)) ) {
 				memset(data,0,sizeof(data));
-				if(sht21_Receive(data,4) != HAL_OK) {
+				if(i2c_read_data(ADD_SHT21, data, 4) != ESP_OK) {
 						goto ERROR;
 				}
 				if(data[0] + data[1] + data[2] ==0) {		
@@ -90,14 +90,14 @@ bool temp_humi_Measure_Handler(float * pTemp, float * pHumi) {
 					
 					//start humidity measuring
 					cmd = SHT21_TRIGGER_RH_MEASURE;
-					if(sht21_Transmit(&cmd, 1)!=HAL_OK) {
+					if(i2c_write_reg(ADD_SHT21, cmd)!=ESP_OK) {
 						goto ERROR;
 					}
 					status = HUMI_CONVERSION_WAIT;
 				}
 				else {		// crc error 
 					cmd = SHT21_TRIGGER_T_MEASURE;
-					if(sht21_Transmit(&cmd, 1)!=HAL_OK) {
+					if(i2c_write_reg(ADD_SHT21, cmd)!=ESP_OK) {
 						goto ERROR;
 					}
 				}
@@ -108,7 +108,7 @@ bool temp_humi_Measure_Handler(float * pTemp, float * pHumi) {
 		case HUMI_CONVERSION_WAIT:
 			if(timeNow >= restart_time && !(over_flow_f  && timeNow < (0xFFFFFFFF - SHT21_MEASURE_WAIT)) ) {
 				memset(data,0,sizeof(data));
-				if(sht21_Receive(data,4) != HAL_OK) {
+				if(i2c_read_data(ADD_SHT21, data,4) != ESP_OK) {
 						goto ERROR;
 				}
 				if(data[0] + data[1] + data[2] ==0) {		
@@ -123,13 +123,19 @@ bool temp_humi_Measure_Handler(float * pTemp, float * pHumi) {
 					raw_value=((uint16_t)data[0]<<8)|data[1];
 					* pHumi = ((float)raw_value*125)/65536-6;
 					
+					if(*pHumi > 100){
+						*pHumi =100;		//asic max value 118 %RH
+					}
+					else if(*pHumi < 0){
+						*pHumi =0;		//asic min value -6 %RH
+					}
 //					cmd = SHT21_TRIGGER_T_MEASURE;
 //					sht21_Transmit(&cmd, 1);
 					status=TEMP_START;
 				}
 				else{	//humidity crc error
 					cmd = SHT21_TRIGGER_RH_MEASURE;
-					if(sht21_Transmit(&cmd, 1)!=HAL_OK) {
+					if(i2c_write_reg(ADD_SHT21, cmd)!=ESP_OK) {
 						goto ERROR;
 					}
 					over_flow_f= time_end_calculation(timeNow, SHT21_MEASURE_WAIT, &restart_time);			
@@ -160,7 +166,8 @@ bool temp_humi_Measure_Handler(float * pTemp, float * pHumi) {
 				}
 		}
 		else {		
-			if(sht21_Transmit(&cmd, 1)!=HAL_OK) {
+//			if(sht21_Transmit(&cmd, 1)!=ESP_OK) {
+			if(i2c_write_reg(ADD_SHT21, cmd)!=ESP_OK) {
 					error_count++;
 				over_flow_f= time_end_calculation(timeNow, SHT21_MEASURE_WAIT, &restart_time);			
 			}
@@ -170,23 +177,29 @@ bool temp_humi_Measure_Handler(float * pTemp, float * pHumi) {
 
 
 
-void sht21_init(uint8_t scl, uint8_t sda){
-  Wire.begin(sda, scl); 
-  Wire.setClock(100000);   
+void sht21_init(void){
+//  Wire.begin(sda, scl); 
+//  Wire.setClock(100000);   
+    i2c_master_init();
+	//delay(100);
+	ets_delay_us(100);
+	i2c_scan();
 	sht21_sw_reset();
-	delay(50);
+	delay(100);
+	sht21_user_reg_set();
 }
 
 static void sht21_user_reg_set(void) {
 	uint8_t reg	= SHT21_RH_14BIT_TEMP_12BIT + SHT21_VDD_225_BIG + SHT21_ON_CHIP_HEATER_DISABLE \
 	+ SHT21_OTP_RELOAD_DISABLE;
-	sht21_Transmit(&reg,1);
+	i2c_write_reg(ADD_SHT21, reg);
 }
 
 bool sht21_sw_reset(void) {
-	uint8_t txd_cmd_reset[2]={CMD_SHT21_RESET,};
+//	uint8_t txd_cmd_reset[2]={CMD_SHT21_RESET,};
 
-	if(sht21_Transmit(txd_cmd_reset,1)==HAL_OK){
+//	if(i2c_write_data(txd_cmd_reset,1)==HAL_OK){
+	if(i2c_write_reg(ADD_SHT21, CMD_SHT21_RESET)==ESP_OK){
 		delay(50);
 		return true;
 	}
@@ -213,30 +226,4 @@ static uint8_t sht21_CalcCRC(uint8_t *data,uint8_t nbrOfBytes){
        }
     }
     return(crc);
-}
-
- 
-static bool sht21_Transmit(uint8_t * pData, uint16_t size) {
-  uint8_t write_byte=0;
-		Wire.beginTransmission(ADD_SHT21);
-   for(uint8_t i=0; i<size;i++) {
-    if(Wire.write(pData[i])) {
-      write_byte++;
-    }
-   Wire.endTransmission();
-   }
-   return write_byte == size;
-//   delay(85);
-}
-
-static uint8_t sht21_Receive(uint8_t * pData, int size) {
-  uint8_t i=0;
-    Wire.requestFrom(ADD_SHT21, size);
-    while ((Wire.available()) && (i < size)) // slave may send less than requested
-    {
-        *pData = Wire.read(); // receive a byte
-        pData++;
-        i++;
-    }
-    return i==size;
 }

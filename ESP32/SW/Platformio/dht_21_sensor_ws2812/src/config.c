@@ -1,17 +1,25 @@
 #include <stdio.h>
 #include <stdint.h>
-#include <string.h>
+//#include <string.h>
+#include <stdbool.h>
+#include "sdkconfig.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+//#include "sdkconfig.h"
 
-#include "FS.h"                // SD Card ESP32
-#include "SD_MMC.h"            // SD Card ESP32
-#include "Wire.h"            // SD Card ESP32
 #include "config.h"            // SD Card ESP32
 
 #define PUSH_SHORT_TIME  50
 #define PUSH_LONG_TIME   800
 
 
-btn_status_e btn_stat;
+
+void delay(uint32_t ms)
+{
+  vTaskDelay(ms / portTICK_PERIOD_MS);
+}
+
+//btn_status_e btn_stat;
 
 bool time_end_calculation(uint32_t time_now, uint32_t time_interval, uint32_t * restart_time) {
     * restart_time = time_now + time_interval;
@@ -22,6 +30,8 @@ bool time_end_calculation(uint32_t time_now, uint32_t time_interval, uint32_t * 
         return true;
     }
 }
+
+/*
 
 void button_read_handler(void) {
   uint32_t millis_count;
@@ -53,8 +63,9 @@ void button_read_handler(void) {
       }
       btn_tick=0;
       befor_btn_status =true;
-      btn_stat = PUSH_NONE;
+      btn_stat == PUSH_NONE;
       
     }
   }
 }
+*/

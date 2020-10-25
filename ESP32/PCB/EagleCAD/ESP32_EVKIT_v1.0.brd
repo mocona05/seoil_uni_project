@@ -10030,7 +10030,7 @@ design rules under a new name.</description>
 <attribute name="NAME" x="22.949" y="-5.541" size="0.7" layer="25" ratio="10" rot="R180"/>
 <attribute name="VALUE" x="23.924" y="-5.399" size="0.7" layer="27" rot="R90"/>
 </element>
-<element name="IC1" library="cona_lib" package="SOT89" value="AP7370Y" x="23.325" y="6.8" smashed="yes" rot="R90">
+<element name="IC1" library="cona_lib" package="SOT89" value="AP7370Y-33Y" x="23.325" y="6.8" smashed="yes" rot="R90">
 <attribute name="NAME" x="19.95" y="6.035" size="0.7" layer="25" ratio="10" rot="R90"/>
 <attribute name="VALUE" x="27.6699" y="4.3949" size="0.7" layer="27" rot="R90"/>
 </element>

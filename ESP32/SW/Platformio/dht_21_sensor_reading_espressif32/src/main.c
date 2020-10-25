@@ -7,24 +7,28 @@
 #include "driver/gpio.h"
 #include "sdkconfig.h"
 #include "config.h"
+#include "board.h"
 #include "drv_sht21.h"
 #include "driver/i2c.h"
-//#include "webpage.h"
+#include "drv_touch.h"
 
 
-//#define LED_GPIO 2
+#define STATE
 
 char str_buff[30];
 bool print_f=false;
 
+
+float temp, humi;
+
+
 static void test_taxk(void *ar){
+    touch_init();
+
     gpio_pad_select_gpio(LED_GPIO);
     gpio_set_direction(LED_GPIO, GPIO_MODE_OUTPUT);
     while(1){
-        delay(30);
-        gpio_set_level(LED_GPIO, 1);
-        delay(30);
-        gpio_set_level(LED_GPIO, 0);
+
         if(print_f) {
             print_f=false;
            printf(str_buff);
@@ -35,7 +39,6 @@ static void test_taxk(void *ar){
 
 static void measuring_task(void *arg){
     sht21_init();
-    float temp, humi;
 
     while(1){
         if(temp_humi_Measure_Handler(&temp, &humi)){

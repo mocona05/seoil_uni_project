@@ -7623,7 +7623,7 @@ Source: www.kingbright.com</description>
 <part name="PE36" library="cona_lib" deviceset="GND" device=""/>
 <part name="PE38" library="cona_lib" deviceset="GND" device=""/>
 <part name="+3V16" library="cona_lib" deviceset="+3V3" device=""/>
-<part name="IC1" library="cona_lib" deviceset="AP7370" device="Y"/>
+<part name="IC1" library="cona_lib" deviceset="AP7370" device="Y" value="AP7370Y-33Y"/>
 <part name="PE17" library="cona_lib" deviceset="GND" device=""/>
 <part name="C2" library="cona_lib" deviceset="C_" device="0603" value="1uF"/>
 <part name="C4" library="cona_lib" deviceset="C_" device="0603" value="1uF"/>
@@ -7786,7 +7786,7 @@ Source: www.kingbright.com</description>
 <instance part="PE20" gate="M" x="299.72" y="302.26" rot="MR0"/>
 <instance part="PAD1" gate="G$1" x="287.02" y="342.9" rot="R180"/>
 <instance part="R14" gate="G$1" x="281.94" y="322.58" rot="R90"/>
-<instance part="+3V1" gate="G$1" x="281.94" y="330.2"/>
+<instance part="+3V1" gate="G$1" x="281.94" y="332.74"/>
 <instance part="R13" gate="G$1" x="274.32" y="312.42" rot="R90"/>
 <instance part="+3V3" gate="G$1" x="274.32" y="325.12"/>
 <instance part="JP1" gate="G$1" x="111.76" y="388.62" rot="R180"/>
@@ -8032,6 +8032,7 @@ Source: www.kingbright.com</description>
 <segment>
 <pinref part="R14" gate="G$1" pin="2"/>
 <pinref part="+3V1" gate="G$1" pin="3V3"/>
+<wire x1="281.94" y1="330.2" x2="281.94" y2="327.66" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="R13" gate="G$1" pin="2"/>

@@ -1,4 +1,7 @@
+
 #pragma once
+
+#include <stdbool.h>
 
 #define LED_GPIO   02
 #define LED_ON      digitalWrite(LED_GPIO,0)
@@ -7,9 +10,6 @@
 
 #define BUTTON_GPIO 11
 #define READ_SW_PIN      digitalRead(BUTTON_GPIO)
-
-#define I2C_SDA 21
-#define I2C_SCL 22
 
 
 
@@ -26,4 +26,6 @@ typedef enum {
 extern btn_status_e btn_stat;
 
 bool time_end_calculation(uint32_t time_now, uint32_t time_interval, uint32_t * restart_time);
-void button_read_handler(void);
+//void button_read_handler(void);
+void delay(uint32_t ms);
+

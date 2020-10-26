@@ -30,6 +30,7 @@ void app_main() {
             sprintf(str_buff,"temp= %5.2f, hum= %5.2f\r\n",temp, humi);
             printf(str_buff);
             gpio_set_level(LED_GPIO,1);  
+            vTaskDelay(100 / portTICK_PERIOD_MS);
         }
         else {
             gpio_set_level(LED_GPIO,0);  

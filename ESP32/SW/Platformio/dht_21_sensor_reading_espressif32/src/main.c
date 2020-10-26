@@ -12,50 +12,29 @@
 #include "driver/i2c.h"
 #include "drv_touch.h"
 
-
 #define STATE
 
-char str_buff[30];
-bool print_f=false;
 
-
-float temp, humi;
-
-
-static void test_taxk(void *ar){
-    touch_init();
-
-    gpio_pad_select_gpio(LED_GPIO);
-    gpio_set_direction(LED_GPIO, GPIO_MODE_OUTPUT);
-    while(1){
-
-        if(print_f) {
-            print_f=false;
-           printf(str_buff);
-        }
-    }
-
-}
-
-static void measuring_task(void *arg){
-    sht21_init();
-
-    while(1){
-        if(temp_humi_Measure_Handler(&temp, &humi)){
-            sprintf(str_buff,"temp= %5.2f, hum= %5.2f\r\n",temp, humi);
-            print_f =true;
-
-        }
-        delay(100);
-
-    }
-
-}
 
 
 void app_main() {
+    float temp, humi;    
+    char str_buff[30];
+    sht21_init();
+    gpio_pad_select_gpio(LED_GPIO);
+    gpio_set_direction(LED_GPIO, GPIO_MODE_OUTPUT);
 
     printf("system boot!\r\n");
-    xTaskCreate(&measuring_task, "measuring_task", 2048, (void* ) 0, 10, NULL);
-    xTaskCreate(&test_taxk, "test_taxk", 2048, (void* ) 0, 1, NULL);
+    while(1){
+        if(temp_humi_Measure_Handler(&temp, &humi)){
+            sprintf(str_buff,"temp= %5.2f, hum= %5.2f\r\n",temp, humi);
+            printf(str_buff);
+            gpio_set_level(LED_GPIO,1);  
+        }
+        else {
+            gpio_set_level(LED_GPIO,0);  
+            vTaskDelay(100 / portTICK_PERIOD_MS);
+        }
+    }
+
 }

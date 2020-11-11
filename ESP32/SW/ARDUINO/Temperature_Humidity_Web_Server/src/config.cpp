@@ -53,7 +53,7 @@ void button_read_handler(void) {
       }
       btn_tick=0;
       befor_btn_status =true;
-      btn_stat == PUSH_NONE;
+      btn_stat = PUSH_NONE;
       
     }
   }

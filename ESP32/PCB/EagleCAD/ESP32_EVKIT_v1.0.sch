@@ -8326,30 +8326,6 @@ Source: www.kingbright.com</description>
 <label x="246.38" y="350.52" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="DAC2" class="0">
-<segment>
-<pinref part="M1" gate="G$2" pin="GPIO25"/>
-<wire x1="243.84" y1="340.36" x2="261.62" y2="340.36" width="0.1524" layer="91"/>
-<label x="246.38" y="340.36" size="1.778" layer="95"/>
-</segment>
-<segment>
-<pinref part="JP1" gate="G$1" pin="2"/>
-<wire x1="104.14" y1="388.62" x2="91.44" y2="388.62" width="0.1524" layer="91"/>
-<label x="93.98" y="388.62" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="DAC1" class="0">
-<segment>
-<pinref part="M1" gate="G$2" pin="GPIO26"/>
-<wire x1="243.84" y1="342.9" x2="261.62" y2="342.9" width="0.1524" layer="91"/>
-<label x="246.38" y="342.9" size="1.778" layer="95"/>
-</segment>
-<segment>
-<pinref part="C1" gate="G$1" pin="+"/>
-<wire x1="93.98" y1="393.7" x2="83.82" y2="393.7" width="0.1524" layer="91"/>
-<label x="86.36" y="393.7" size="1.778" layer="95"/>
-</segment>
-</net>
 <net name="LED0" class="0">
 <segment>
 <pinref part="R5" gate="G$1" pin="1"/>
@@ -8503,6 +8479,30 @@ Source: www.kingbright.com</description>
 <pinref part="R8" gate="G$1" pin="1"/>
 <pinref part="J1" gate="1" pin="2"/>
 <wire x1="162.56" y1="276.86" x2="162.56" y2="287.02" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="DAC1" class="0">
+<segment>
+<pinref part="M1" gate="G$2" pin="GPIO25"/>
+<wire x1="243.84" y1="340.36" x2="261.62" y2="340.36" width="0.1524" layer="91"/>
+<label x="246.38" y="340.36" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="JP1" gate="G$1" pin="2"/>
+<wire x1="104.14" y1="388.62" x2="91.44" y2="388.62" width="0.1524" layer="91"/>
+<label x="93.98" y="388.62" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="DAC2" class="0">
+<segment>
+<pinref part="C1" gate="G$1" pin="+"/>
+<wire x1="93.98" y1="393.7" x2="83.82" y2="393.7" width="0.1524" layer="91"/>
+<label x="86.36" y="393.7" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="M1" gate="G$2" pin="GPIO26"/>
+<wire x1="243.84" y1="342.9" x2="261.62" y2="342.9" width="0.1524" layer="91"/>
+<label x="246.38" y="342.9" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>

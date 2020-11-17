@@ -10,6 +10,7 @@
 #define HAL_OK 1
 
 #define SHT21_MEASURE_WAIT 120
+#define CYCLE_END_WAIT_TIME 5
 
 #define ERROR_TEMP_VALUE -55;
 #define ERROR_HUMI_VALUE 0;
@@ -37,6 +38,7 @@ typedef enum {
 	TEMP_START,
 	TEMP_CONVERSION_WAIT,
 	HUMI_CONVERSION_WAIT,
+	CYCLE_END_WAIT,
 }SHT21status_e;
 
 #define I2C_ERROR_RST_COUNT	5
@@ -61,6 +63,7 @@ bool temp_humi_Measure_Handler(float * pTemp, float * pHumi) {
 			if(!sht21_sw_reset()) {
 				goto ERROR;
 			}
+			sht21_user_reg_set();
 			status = TEMP_START;
 			break;
 		
@@ -125,7 +128,8 @@ bool temp_humi_Measure_Handler(float * pTemp, float * pHumi) {
 					
 //					cmd = SHT21_TRIGGER_T_MEASURE;
 //					sht21_Transmit(&cmd, 1);
-					status=TEMP_START;
+					status=CYCLE_END_WAIT;
+					over_flow_f= time_end_calculation(timeNow, CYCLE_END_WAIT_TIME, &restart_time);			
 				}
 				else{	//humidity crc error
 					cmd = SHT21_TRIGGER_RH_MEASURE;
@@ -134,6 +138,11 @@ bool temp_humi_Measure_Handler(float * pTemp, float * pHumi) {
 					}
 					over_flow_f= time_end_calculation(timeNow, SHT21_MEASURE_WAIT, &restart_time);			
 				}
+			}
+			break;
+		case CYCLE_END_WAIT:
+			if(timeNow >= restart_time && !(over_flow_f  && timeNow < (0xFFFFFFFF - CYCLE_END_WAIT_TIME)) ) {
+				status=TEMP_START;
 			}
 			break;
 		

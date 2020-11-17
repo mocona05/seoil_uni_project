@@ -1,20 +1,17 @@
 //https://github.com/nhatuan84/esp32-micro-sdcard/blob/master/examples/nanosdcard2/nanosdcard2.ino
 
+#include "Arduino.h"
+#include "board.h"
 #include <SPI.h>
 #include <mySD.h>
+#include "sd_test.h"
 
 
-#define SD_CS_PIN   15
-#define SPI2_SCK_PIN   14
-#define SPI2_MOSI_PIN   13
-#define SPI2_MISO_PIN   12
+ File myFile;
 
-File myFile;
+void sd_test(void){
 
-void setup() {
-  Serial.begin(115200);
-  
-   Serial.print("Initializing SD card...");
+    Serial.print("Initializing SD card...");
   // On the Ethernet Shield, CS is pin 4. It's set as an output by default.
   // Note that even if it's not used as the CS pin, the hardware SS pin 
   // (10 on Arduino Uno boards, 53 on the Mega) must be left as an output 
@@ -58,8 +55,4 @@ void setup() {
   	// if the file didn't open, print an error:
     Serial.println("error opening test.txt");
   }
-}
-
-void loop(){
-
 }

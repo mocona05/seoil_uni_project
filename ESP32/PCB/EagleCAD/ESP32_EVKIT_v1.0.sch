@@ -7681,7 +7681,7 @@ Source: www.kingbright.com</description>
 <part name="JP3" library="cona_lib" deviceset="MA02" device="53398" value="BATTERY"/>
 <part name="PE22" library="cona_lib" deviceset="GND" device=""/>
 <part name="X1" library="cona_lib" deviceset="MICRO_SD_ATOM-A01482" device=""/>
-<part name="R11" library="cona_lib" deviceset="R_" device="0603" value="10k"/>
+<part name="R11" library="cona_lib" deviceset="R_" device="0603" value="1k"/>
 <part name="JP6" library="cona_lib" deviceset="MA02" device="ED350V-02P" value="ED350V-02P"/>
 <part name="C1" library="cona_lib" deviceset="CP_" device="2012" value="10uF"/>
 <part name="R1" library="cona_lib" deviceset="R_" device="0603" value="47k"/>

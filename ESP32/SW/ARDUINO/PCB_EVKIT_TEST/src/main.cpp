@@ -17,16 +17,14 @@ void setup() {
 
 }
 
-void loop(){
-  float humi, temp;
-  char buffer[50];
+void loop() {
+  float temp, humi;
+  char buff[50];
 
   if(temp_humi_Measure_Handler(&temp, &humi)) {
-    sprintf(buffer, "Temp=%.2f, humi=%.2f", temp, humi);
-    Serial.println(buffer);
+    sprintf(buff,"temp=%.2f, humi=%.2f\r\n", temp, humi);
+    Serial.print(buff);
   }
-  rgb_led_handler();
-  gpio_handler();
-  dac_handler();
+    delay(1);   //esp32의 arduino frame work 는 Free rtos가 포팅되어 있어 delay가 없을 경우 os 리소스 반환이 없어 문제가 되어 삽입
 
 }

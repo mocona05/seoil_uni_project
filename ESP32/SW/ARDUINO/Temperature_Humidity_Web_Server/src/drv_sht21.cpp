@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-//#include <errno.h>
 #include <time.h>
 #include <math.h>
 #include "drv_sht21.h"
@@ -22,11 +21,9 @@ typedef enum{
 }SHT21_resolution_e;
 
 
-//static uint8_t SHT21_conversion_time;
-
 static uint8_t sht21_CalcCRC(uint8_t *data,uint8_t nbrOfBytes);
 static bool sht21_Transmit(uint8_t * pData, uint16_t size);
-static uint8_t sht21_Receive(uint8_t * pData, int size);
+static uint8_t sht21_Receive(uint8_t * pData, uint16_t size);
 bool time_end_calculation(uint32_t time_now, uint32_t time_interval, uint32_t * restart_time);
 
 
@@ -51,7 +48,6 @@ bool temp_humi_Measure_Handler(float * pTemp, float * pHumi) {
 	uint8_t data[4];
 	bool return_value =false;
 	static bool over_flow_f =false;
-//	static uint32_t last_update_time;
 
 	timeNow=millis();
 	switch((uint8_t) status) {
@@ -61,6 +57,7 @@ bool temp_humi_Measure_Handler(float * pTemp, float * pHumi) {
 			if(!sht21_sw_reset()) {
 				goto ERROR;
 			}
+			sht21_user_reg_set();
 			status = TEMP_START;
 			break;
 		
@@ -74,7 +71,6 @@ bool temp_humi_Measure_Handler(float * pTemp, float * pHumi) {
 			break;
 		
 		case TEMP_CONVERSION_WAIT:
-//		if(timeNow-timeStart > SHT21_MEASURE_WAIT){
 			if(timeNow >= restart_time && !(over_flow_f  && timeNow > (0xFFFFFFFF - SHT21_MEASURE_WAIT)) ) {
 				memset(data,0,sizeof(data));
 				if(sht21_Receive(data,4) != HAL_OK) {
@@ -119,12 +115,8 @@ bool temp_humi_Measure_Handler(float * pTemp, float * pHumi) {
 					error_count=0;		
 					stop_err_cont =0;
 					return_value = true;
-//					last_update_time = timeNow;		
 					raw_value=((uint16_t)data[0]<<8)|data[1];
 					* pHumi = ((float)raw_value*125)/65536-6;
-					
-//					cmd = SHT21_TRIGGER_T_MEASURE;
-//					sht21_Transmit(&cmd, 1);
 					status=TEMP_START;
 				}
 				else{	//humidity crc error
@@ -228,9 +220,9 @@ static bool sht21_Transmit(uint8_t * pData, uint16_t size) {
    }
    return error==0;
 }
-static uint8_t sht21_Receive(uint8_t * pData, int size) {
-  uint8_t i=0;
-    Wire.requestFrom(ADD_SHT21, size);
+static uint8_t sht21_Receive(uint8_t * pData, uint16_t size) {
+  uint16_t i=0;
+    Wire.requestFrom((int) ADD_SHT21, size);
     while ((Wire.available()) && (i < size)) // slave may send less than requested
     {
         *pData = Wire.read(); // receive a byte

@@ -10142,7 +10142,7 @@ design rules under a new name.</description>
 <attribute name="NAME" x="1.055" y="7.92" size="0.7" layer="21" ratio="10"/>
 <attribute name="VALUE" x="13.93" y="-6.26" size="0.7" layer="27" ratio="10" rot="R90"/>
 </element>
-<element name="R11" library="cona_lib" package="R0603" value="10k" x="43.2" y="15.525" smashed="yes">
+<element name="R11" library="cona_lib" package="R0603" value="1k" x="43.2" y="15.525" smashed="yes">
 <attribute name="NAME" x="41.624" y="15.809" size="0.7" layer="25" ratio="10" rot="R180"/>
 <attribute name="VALUE" x="41.676" y="14.001" size="0.7" layer="27" ratio="10"/>
 </element>

@@ -26,4 +26,3 @@ typedef enum {
 extern btn_status_e btn_stat;
 
 bool time_end_calculation(uint32_t time_now, uint32_t time_interval, uint32_t * restart_time);
-void button_read_handler(void);

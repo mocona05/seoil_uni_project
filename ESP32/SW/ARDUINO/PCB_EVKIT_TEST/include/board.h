@@ -1,12 +1,9 @@
-#ifndef __BOARD_H__
-#define __BOARD_H__
+#pragma onece
 
 #define LED_BUILTIN_PIN     2
 #define LED_RED_PIN         33
 #define LED_GREEN_PIN       19
 #define LED_BLUE_PIN        18
-
-#endif
 
 #define LED_BUILTIN_PIN     2
 #define LED_RED_PIN         33

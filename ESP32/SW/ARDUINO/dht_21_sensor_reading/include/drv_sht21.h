@@ -70,9 +70,5 @@ extern float temperature, humi;
 //extern SHT21_resolution_e resolution;
 
 bool temp_humi_Measure_Handler(float * pTemp, float * pHumi);
-bool temp_humi_Measure_ring(float * pTemp, float * pHumi) ;
 bool sht21_sw_reset(void);
-
-//uint8_t SHT21_CalcCrc(uint8_t *data,uint8_t nbrOfBytes);
-//void I2C_SHT32_resolution_set(SHT21_resolution_e resolution);
 void sht21_init(uint8_t scl, uint8_t sda);

@@ -2,12 +2,7 @@
 
 #include <SPI.h>
 #include <mySD.h>
-
-
-#define SD_CS_PIN   15
-#define SPI2_SCK_PIN   14
-#define SPI2_MOSI_PIN   13
-#define SPI2_MISO_PIN   12
+#include "board.h"
 
 File myFile;
 
@@ -61,5 +56,4 @@ void setup() {
 }
 
 void loop(){
-
 }

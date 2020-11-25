@@ -5,7 +5,7 @@
 
 CAN_device_t CAN_cfg;               // CAN Config
 unsigned long previousMillis = 0;   // will store last time a CAN Message was send
-const int interval = 1000;          // interval at which send CAN Messages (milliseconds)
+const int interval = 100;          // interval at which send CAN Messages (milliseconds)
 const int rx_queue_size = 10;       // Receive Queue size
 
 void setup() {
@@ -51,9 +51,9 @@ void loop() {
     previousMillis = currentMillis;
     CAN_frame_t tx_frame;
     tx_frame.FIR.B.FF = CAN_frame_std;
-    tx_frame.MsgID = 0x001;
+    tx_frame.MsgID = 0x010;
     tx_frame.FIR.B.DLC = 8;
-    tx_frame.data.u8[0] = 0x00;
+    tx_frame.data.u8[0] = 0xAA;
     tx_frame.data.u8[1] = 0x01;
     tx_frame.data.u8[2] = 0x02;
     tx_frame.data.u8[3] = 0x03;

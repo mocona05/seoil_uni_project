@@ -5,7 +5,7 @@
 #include "freertos/FreeRTOS.h"
 #include "drv_gpio.h"
 #include "BluetoothSerial.h"
-#include "drv_sht21.h"
+//#include "drv_sht21.h"
 
   
 //This example code is in the Public Domain (or CC0 licensed, at your option.)
@@ -24,7 +24,7 @@ void setup() {
   init_gpio();
   sht21_init(SCL_PIN,SDA_PIN);
   Serial.begin(115200);
-  SerialBT.begin("ESP32test"); //Bluetooth device name
+  SerialBT.begin("ESP32_TEMP"); //Bluetooth device name
   Serial.println("The device started, now you can pair it with bluetooth!");
 }
 

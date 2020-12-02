@@ -2,16 +2,10 @@
 #include <stdint.h>
 #include <string.h>
 
-//#include "FS.h"                // SD Card ESP32
-//#include "SD_MMC.h"            // SD Card ESP32
-//#include "Wire.h"            // SD Card ESP32
 #include "config.h"            // SD Card ESP32
 #include "webpage.h"
 
-//#include <SPI.h>
-
 #include "drv_sht21.h"
-//#include "sd_memory.h"
 
 
 // Libraries to get time from NTP Server
@@ -26,8 +20,8 @@ WebServer server(80);
 
 
 // Replace with your network credentials
-const char* ssid     = "WIFI_SSID";
-const char* password = "WIFI_PASSWORD";
+const char* ssid     = "wifi_ssid";
+const char* password = "wifi_password";
 
 //===============================================================
 // This routine is executed when you open its IP in browser
@@ -66,7 +60,6 @@ void init_webServer(void) {
  
   server.on("/", handleRoot);      //This is display page
   server.on("/readSensor", handleSensor);//To get update of ADC Value only
-//  server.on("/readStatus", handleStatus);//To get update of ADC Value only
  
   server.begin();                  //Start server
   Serial.println("HTTP server started");  

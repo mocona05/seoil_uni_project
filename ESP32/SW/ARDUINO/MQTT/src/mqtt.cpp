@@ -6,6 +6,7 @@
 #include "board.h"
 #include "drv_sht21.h"
 #include <ArduinoJson.h>
+#include <math.h>
 
 const char* ssid = "WIFI SSID";
 const char* password = "WIFI PASSWORD";
@@ -68,10 +69,17 @@ void callback(char* topic, byte* payload, unsigned int length) {
   
   Serial.println(scribe_str);
   int LED[4]={0,};
+  /*
   for(int i=0;i<4;i++){
     LED[i] = scribe["LED"][i];
     Serial.print(LED[i]);
   }
+  */
+     LED[0] = scribe["blt_led"];
+     LED[1] = scribe["red_led"];
+     LED[2] = scribe["green_led"];
+     LED[3] = scribe["blue_led"];
+
   digitalWrite(LED_RED_PIN,LED[1]);
   digitalWrite(LED_GREEN_PIN,LED[2]);
   digitalWrite(LED_BLUE_PIN,LED[3]);
@@ -115,20 +123,27 @@ void mqtt_handler(float humi, float temp){
   StaticJsonDocument<500> doc;
   char json_str[500];
 
-  JsonArray sensorValues = doc.createNestedArray("sensor");
+  doc["temp"] = ceil(temp*100)/100;
+  doc["humi"] = ceil(humi*100)/100;
+//  JsonArray sensorValues = doc.createNestedArray("sensor");
 //  sensorValues.add(temp);
-//  sensorValues.add(humi);
-  char value_str[8];
-  dtostrf(temp, 1, 2, value_str);
-  sensorValues.add(value_str);
-  dtostrf(humi, 1, 2, value_str);
-  sensorValues.add(value_str);
-
+ // sensorValues.add(humi);
+//  char value_str[8];
+//  dtostrf(temp, 1, 2, value_str);
+//  sensorValues.add(value_str);
+//  dtostrf(humi, 1, 2, value_str);
+//  sensorValues.add(value_str);
+/*
   JsonArray digitalValues = doc.createNestedArray("led");
   digitalValues.add(READ_BUILTIN_LED_PIN);
   digitalValues.add(READ_RED_LED_PIN);
   digitalValues.add(READ_GREEN_LED_PIN);
   digitalValues.add(READ_BLUE_LED_PIN);
+*/
+  doc["blt_led"] = READ_BUILTIN_LED_PIN;
+  doc["red_led"] = READ_RED_LED_PIN;
+  doc["green_led"] = READ_GREEN_LED_PIN;
+  doc["blue_led"] = READ_BLUE_LED_PIN;
 
   serializeJson(doc, json_str);
   client.publish(topic,json_str);

@@ -6,6 +6,9 @@
 
 void setup() {
   Serial.begin(115200);
+  pinMode(I2C_SCL,INPUT_PULLUP);
+  pinMode(I2C_SDA,INPUT_PULLUP);
+
   Wire.begin(I2C_SDA, I2C_SCL); 
   Wire.setClock(100000);   
   Serial.println("\nI2C Scanner");  
